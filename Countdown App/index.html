@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Countdown Timer</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin: 50px auto;
+        max-width: 400px;
+      }
+      h1 {
+        color: #333;
+      }
+      label {
+        font-weight: bold;
+      }
+      input[type="number"] {
+        padding: 5px;
+        font-size: 16px;
+        width: 80px;
+        margin-right: 10px;
+      }
+      button {
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 10px;
+      }
+      button:hover {
+        background-color: #45a049;
+      }
+      #countdown {
+        font-size: 32px;
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Countdown Timer</h1>
+    <div>
+      <label for="duration">Duration (seconds):</label>
+      <input type="number" id="duration" min="1" value="60" />
+      <button onclick="startTimer()" id="startButton">Start</button>
+      <button onclick="pauseTimer()" id="pauseButton" style="display: none;">
+        Pause
+      </button>
+      <button onclick="resetTimer()" id="resetButton" style="display: none;">
+        Reset
+      </button>
+    </div>
+    <div id="countdown"></div>
+
+    <script>
+      let durationInput = document.getElementById('duration');
+      let countdownElement = document.getElementById('countdown');
+      let startButton = document.getElementById('startButton');
+      let pauseButton = document.getElementById('pauseButton');
+      let resetButton = document.getElementById('resetButton');
+      let timerInterval;
+      let duration;
+      let startTime;
+
+      function startTimer() {
+        if (!timerInterval) {
+          duration = parseInt(durationInput.value);
+          startTime = Date.now();
+          timerInterval = setInterval(updateCountdown, 1000);
+          startButton.style.display = 'none';
+          pauseButton.style.display = 'inline-block';
+          resetButton.style.display = 'inline-block';
+        }
+      }
+
+      function pauseTimer() {
+        clearInterval(timerInterval);
+        timerInterval = null;
+        startButton.style.display = 'inline-block';
+        pauseButton.style.display = 'none';
+      }
+
+      function resetTimer() {
+        clearInterval(timerInterval);
+        timerInterval = null;
+        countdownElement.textContent = '';
+        startButton.style.display = 'inline-block';
+        pauseButton.style.display = 'none';
+        resetButton.style.display = 'none';
+      }
+
+      function updateCountdown() {
+        let elapsedTime = Math.floor((Date.now() - startTime) / 1000);
+        let remainingTime = duration - elapsedTime;
+
+        if (remainingTime <= 0) {
+          clearInterval(timerInterval);
+          timerInterval = null;
+          countdownElement.textContent = 'Time\'s up!';
+          startButton.style.display = 'inline-block';
+          pauseButton.style.display = 'none';
+          resetButton.style.display = 'none';
+        } else {
+          let hours = Math.floor(remainingTime / 3600);
+          let minutes = Math.floor((remainingTime % 3600) / 60);
+          let seconds = remainingTime % 60;
+          countdownElement.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+      }
+    </script>
+  </body>
+</html>
